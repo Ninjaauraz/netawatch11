@@ -988,6 +988,72 @@ canvas.sparkline { display: block; }
 </footer>
 
 <script>
+// ─── SUPABASE CONFIG ─────────────────────────────────────────────────────────
+const SUPABASE_URL = 'https://vnnocyjhtqcuocyleuyd.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZubm9jeWpodHFjdW9jeWxldXlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4MTQyNTAsImV4cCI6MjA4ODM5MDI1MH0.bDf3W4byuYySCv3isIzldrgvK6Dpp13Zi_64oQYTakceyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZubm9jeWpodHFjdW9jeWxldXlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk4MzIwMDAsImV4cCI6MjAyNTQwODAwMH0.placeholder';
+
+async function fetchPoliticians(filters = {}) {
+  let url = `${SUPABASE_URL}/rest/v1/politicians?select=*`;
+  if (filters.state) url += `&state=eq.${encodeURIComponent(filters.state)}`;
+  if (filters.party) url += `&party=eq.${encodeURIComponent(filters.party)}`;
+  if (filters.position) url += `&position=eq.${encodeURIComponent(filters.position)}`;
+  if (filters.search) url += `&name=ilike.*${encodeURIComponent(filters.search)}*`;
+  url += '&order=integrity.desc&limit=20';
+
+  const res = await fetch(url, {
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`
+    }
+  });
+  return await res.json();
+}
+
+async function loadPoliticians() {
+  const grid = document.getElementById('politicians-grid');
+  grid.innerHTML = '<div class="loading">Fetching politicians from database</div>';
+  
+  try {
+    const data = await fetchPoliticians();
+    // Map Supabase fields to our card format
+    const mapped = data.map(p => ({
+      id: p.id,
+      name: p.name,
+      initials: p.initials || p.name.split(' ').map(w=>w[0]).join('').substring(0,2),
+      party: p.party,
+      partyObj: { name: p.party, color: p.party_color || '#888', cls: 'tag-other' },
+      state: p.state,
+      constituency: p.constituency,
+      position: p.position,
+      isMP: p.position?.includes('MP'),
+      totalAssets: p.total_assets,
+      assetGrowth: p.asset_growth,
+      criminal: p.criminal || 0,
+      serious: p.serious || 0,
+      corps: p.corps || 0,
+      switches: p.switches || 0,
+      integrityScore: p.integrity,
+      riskLevel: p.risk_level,
+      attendance: p.attendance,
+      questionsRaised: p.questions,
+      education: p.education,
+      profession: p.profession,
+      elections: p.elections,
+      prevAssets: p.prev_assets,
+      lastUpdate: '1d ago',
+      newsItems: 5,
+    }));
+    
+    document.getElementById('result-count').textContent = 
+      `Showing ${mapped.length} real politicians from database`;
+    renderPoliticianCards(mapped);
+  } catch(err) {
+    console.error(err);
+    grid.innerHTML = '<div class="loading">Error loading data — showing demo</div>';
+    renderPoliticianCards(POLITICIANS.slice(0,12));
+  }
+}
+
 // ─── DATA ───────────────────────────────────────────────────────────────────
 const PARTIES = {
   BJP: { name:'BJP', color:'#ff6b00', cls:'tag-bjp' },
@@ -1716,7 +1782,7 @@ function closeModal() {
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 renderTicker();
-renderPoliticianCards(POLITICIANS.slice(0,12));
+loadPoliticians(); // ← loads from Supabase now
 renderRankTable(0);
 renderDashboard();
 renderNewsFeed();
