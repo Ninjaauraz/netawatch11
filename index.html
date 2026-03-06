@@ -1494,8 +1494,47 @@ function renderNewsFeed() {
 }
 
 // ─── PROFILE ──────────────────────────────────────────────────────────────────
-function showProfile(id) {
-  const p = POLITICIANS.find(x => x.id === id) || makePolitician(id);
+async function showProfile(id) {
+  // Fetch this specific politician from Supabase
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/politicians?id=eq.${id}&select=*`, {
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`
+    }
+  });
+  const data = await res.json();
+  const row = data[0];
+
+  // Map Supabase fields to profile format
+  const p = row ? {
+    id: row.id,
+    name: row.name,
+    initials: row.initials || row.name.split(' ').map(w=>w[0]).join('').substring(0,2),
+    party: row.party,
+    partyObj: { name: row.party, color: row.party_color || '#888', cls: 'tag-other' },
+    state: row.state,
+    constituency: row.constituency,
+    position: row.position,
+    isMP: row.position?.includes('MP'),
+    totalAssets: row.total_assets,
+    assetGrowth: row.asset_growth,
+    movableAssets: Math.round(row.total_assets * 0.4),
+    liabilities: Math.round(row.total_assets * 0.1),
+    criminal: row.criminal || 0,
+    serious: row.serious || 0,
+    corps: row.corps || 0,
+    switches: row.switches || 0,
+    integrityScore: row.integrity,
+    riskLevel: row.risk_level,
+    attendance: row.attendance,
+    questionsRaised: row.questions,
+    education: row.education,
+    profession: row.profession,
+    elections: row.elections,
+    prevAssets: row.prev_assets,
+    lastUpdate: '1d ago',
+    newsItems: 5,
+  } : makePolitician(id);
   document.getElementById('main-view').style.display = 'none';
   document.getElementById('footer').style.display = 'none';
   document.querySelector('.alerts-strip').style.display = 'none';
