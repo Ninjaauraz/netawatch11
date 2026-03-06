@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>NetaWatch — India Political Intelligence Platform</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/recharts/2.8.0/Recharts.min.js"></script>
+<!-- charting library removed - using pure CSS charts -->
 <style>
 :root {
   --ink: #0a0a0f;
@@ -255,8 +255,9 @@ section { padding: 80px 4rem; }
 /* ─── POLITICIAN CARDS ─── */
 .cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 1.2rem;
+  width: 100%;
 }
 .pol-card {
   background: var(--card);
