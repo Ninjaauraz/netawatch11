@@ -1212,6 +1212,9 @@ function filterPoliticians() {
   const party = document.getElementById('filter-party').value;
   const pos = document.getElementById('filter-pos').value;
 
+  loadPoliticians({ search: q, state, party, position: pos });
+  return;
+
   let filtered = POLITICIANS.filter(p => {
     if(q && !p.name.toLowerCase().includes(q) && !p.constituency.toLowerCase().includes(q)) return false;
     if(state && p.state !== state) return false;
@@ -1783,10 +1786,10 @@ function closeModal() {
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 renderTicker();
-loadPoliticians(); // ← loads from Supabase now
 renderRankTable(0);
 renderDashboard();
 renderNewsFeed();
+loadPoliticians(); // ← loads from Supabase now - must be last
 
 // Animate stat numbers
 function animateNum(el, target, prefix='', suffix='') {
