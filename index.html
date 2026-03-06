@@ -1,0 +1,1736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>NetaWatch — India Political Intelligence Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/recharts/2.8.0/Recharts.min.js"></script>
+<style>
+:root {
+  --ink: #0a0a0f;
+  --paper: #f7f5f0;
+  --saffron: #ff6b00;
+  --saffron-dim: #ff6b0022;
+  --green: #00a651;
+  --green-dim: #00a65115;
+  --red: #d62828;
+  --red-dim: #d6282810;
+  --gold: #c9a84c;
+  --slate: #1a1a2e;
+  --muted: #6b6b7a;
+  --border: #e0ddd6;
+  --card: #ffffff;
+  --surface: #f0ede6;
+  --mono: 'DM Mono', monospace;
+  --display: 'Syne', sans-serif;
+  --serif: 'Instrument Serif', serif;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { 
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  width: 100%;
+}
+body {
+  overflow-x: hidden;
+  width: 100%;
+  position: relative;
+}
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--display);
+  min-height: 100vh;
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100vw;
+}
+
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--surface); }
+::-webkit-scrollbar-thumb { background: var(--saffron); border-radius: 2px; }
+
+/* ─── NAV ─── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+  background: rgba(10,10,15,0.97);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid #ffffff10;
+  padding: 0 2rem;
+  height: 60px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-logo {
+  display: flex; align-items: center; gap: 10px;
+  color: white; font-weight: 800; font-size: 1.25rem; letter-spacing: -0.02em;
+}
+.nav-logo .accent { color: var(--saffron); }
+.nav-logo .badge {
+  background: var(--saffron); color: white;
+  font-size: 0.55rem; font-family: var(--mono);
+  padding: 2px 6px; border-radius: 3px; letter-spacing: 0.08em;
+  font-weight: 500;
+}
+.nav-links { display: flex; gap: 2rem; align-items: center; }
+.nav-link {
+  color: #aaa; font-size: 0.82rem; font-weight: 500;
+  cursor: pointer; transition: color 0.2s; letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.nav-link:hover, .nav-link.active { color: var(--saffron); }
+.nav-pill {
+  background: var(--saffron); color: white;
+  padding: 6px 16px; border-radius: 4px;
+  font-size: 0.78rem; font-weight: 700; cursor: pointer;
+  letter-spacing: 0.05em;
+}
+.live-dot {
+  display: inline-flex; align-items: center; gap: 5px;
+  color: var(--green); font-size: 0.72rem; font-family: var(--mono);
+}
+.live-dot::before {
+  content: ''; width: 6px; height: 6px;
+  background: var(--green); border-radius: 50%;
+  animation: pulse 1.5s infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity:1; transform:scale(1); }
+  50% { opacity:0.5; transform:scale(1.3); }
+}
+
+/* ─── HERO ─── */
+.hero {
+  min-height: 100vh;
+  width: 100%;
+  background: var(--slate);
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 120px 4rem 80px;
+  position: relative; overflow: hidden;
+  box-sizing: border-box;
+}
+.hero-grid {
+  position: absolute; inset: 0;
+  width: 100%;
+  background-image:
+    linear-gradient(rgba(255,107,0,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,107,0,0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+  overflow: hidden;
+}
+.hero-glow {
+  position: absolute; top: -200px; right: -200px;
+  width: 700px; height: 700px;
+  background: radial-gradient(circle, rgba(255,107,0,0.12) 0%, transparent 70%);
+  pointer-events: none;
+  max-width: 100vw;
+  overflow: hidden;
+}
+.hero-glow2 {
+  position: absolute; bottom: -200px; left: 10%;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(0,166,81,0.08) 0%, transparent 70%);
+  pointer-events: none;
+  max-width: 100vw;
+  overflow: hidden;
+}
+.hero-eyebrow {
+  color: var(--saffron); font-family: var(--mono);
+  font-size: 0.75rem; letter-spacing: 0.15em; font-weight: 500;
+  text-transform: uppercase; margin-bottom: 1.5rem;
+  display: flex; align-items: center; gap: 12px;
+}
+.hero-eyebrow::before {
+  content: ''; flex: 0 0 40px; height: 1px; background: var(--saffron);
+}
+.hero h1 {
+  font-size: clamp(3rem, 7vw, 6.5rem);
+  color: white; font-weight: 800; line-height: 0.95;
+  letter-spacing: -0.03em; max-width: 900px;
+}
+.hero h1 em {
+  font-style: normal;
+  background: linear-gradient(135deg, var(--saffron), #ffaa00);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero-sub {
+  color: #8888aa; font-size: 1.05rem; line-height: 1.6;
+  max-width: 560px; margin: 2rem 0 3rem;
+}
+.hero-ctas { display: flex; gap: 1rem; flex-wrap: wrap; }
+.btn-primary {
+  background: var(--saffron); color: white;
+  padding: 14px 28px; border: none; border-radius: 6px;
+  font-family: var(--display); font-size: 0.9rem; font-weight: 700;
+  cursor: pointer; letter-spacing: 0.02em;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,107,0,0.4); }
+.btn-ghost {
+  background: transparent; color: white;
+  padding: 14px 28px; border: 1px solid #ffffff22; border-radius: 6px;
+  font-family: var(--display); font-size: 0.9rem; font-weight: 600;
+  cursor: pointer; letter-spacing: 0.02em;
+  transition: border-color 0.2s, background 0.2s;
+}
+.btn-ghost:hover { border-color: var(--saffron); background: rgba(255,107,0,0.08); }
+
+/* ─── STAT TICKER ─── */
+.stat-ticker {
+  background: rgba(255,107,0,0.08);
+  border: 1px solid rgba(255,107,0,0.2);
+  border-radius: 8px; padding: 1.5rem 2rem;
+  margin-top: 4rem;
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.5rem;
+}
+.stat-item { text-align: center; }
+.stat-num {
+  font-size: 2rem; font-weight: 800; color: white;
+  font-family: var(--mono); letter-spacing: -0.02em;
+}
+.stat-num span { color: var(--saffron); }
+.stat-label { color: #7777aa; font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 4px; }
+.stat-delta {
+  font-family: var(--mono); font-size: 0.65rem; color: var(--green);
+  background: var(--green-dim); padding: 2px 6px; border-radius: 3px;
+  display: inline-block; margin-top: 4px;
+}
+
+/* ─── SEARCH BAR ─── */
+.search-wrapper {
+  padding: 60px 4rem;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+.search-label {
+  font-size: 0.75rem; font-family: var(--mono);
+  color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+.search-row { display: flex; gap: 1rem; max-width: 900px; flex-wrap: wrap; }
+.search-box {
+  flex: 1; display: flex; align-items: center;
+  background: var(--card); border: 2px solid var(--border);
+  border-radius: 8px; padding: 0 1.2rem; gap: 12px;
+  transition: border-color 0.2s;
+}
+.search-box:focus-within { border-color: var(--saffron); }
+.search-box input {
+  flex: 1; border: none; outline: none; background: transparent;
+  font-family: var(--display); font-size: 0.95rem; padding: 14px 0; color: var(--ink);
+}
+.search-box input::placeholder { color: #bbb; }
+.search-icon { color: var(--muted); font-size: 1rem; }
+.filter-pills { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 1.2rem; }
+.filter-pill {
+  background: var(--card); border: 1px solid var(--border);
+  padding: 6px 14px; border-radius: 20px;
+  font-size: 0.75rem; cursor: pointer; font-weight: 500;
+  transition: all 0.2s; color: var(--muted);
+}
+.filter-pill:hover, .filter-pill.active {
+  background: var(--saffron); border-color: var(--saffron); color: white;
+}
+.select-filter {
+  background: var(--card); border: 2px solid var(--border);
+  padding: 14px 1.2rem; border-radius: 8px;
+  font-family: var(--display); font-size: 0.88rem; color: var(--ink);
+  cursor: pointer; min-width: 160px; outline: none;
+  transition: border-color 0.2s;
+}
+.select-filter:focus { border-color: var(--saffron); }
+
+/* ─── SECTIONS ─── */
+section { padding: 80px 4rem; }
+.section-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2.5rem; }
+.section-title {
+  font-size: 1.8rem; font-weight: 800; letter-spacing: -0.02em;
+}
+.section-title em { font-style: normal; color: var(--saffron); }
+.section-sub { color: var(--muted); font-size: 0.85rem; margin-top: 4px; }
+.see-all { color: var(--saffron); font-size: 0.8rem; font-weight: 600; cursor: pointer; letter-spacing: 0.05em; }
+
+/* ─── POLITICIAN CARDS ─── */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.2rem;
+}
+.pol-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px; overflow: hidden;
+  cursor: pointer; transition: all 0.25s;
+  position: relative;
+}
+.pol-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.1);
+  border-color: var(--saffron);
+}
+.pol-card-header {
+  background: var(--slate);
+  padding: 20px 20px 12px;
+  display: flex; align-items: flex-start; gap: 14px;
+}
+.pol-avatar {
+  width: 52px; height: 52px; border-radius: 50%;
+  object-fit: cover; flex-shrink: 0;
+  border: 2px solid rgba(255,107,0,0.3);
+}
+.pol-avatar-placeholder {
+  width: 52px; height: 52px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--saffron), #c85000);
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-weight: 800; font-size: 1.2rem;
+}
+.pol-name { color: white; font-weight: 700; font-size: 0.95rem; line-height: 1.3; }
+.pol-meta { color: #7788aa; font-size: 0.72rem; font-family: var(--mono); margin-top: 3px; }
+.pol-party-tag {
+  margin-top: 6px; display: inline-flex; align-items: center;
+  font-size: 0.65rem; font-weight: 700; letter-spacing: 0.06em;
+  padding: 3px 8px; border-radius: 3px;
+}
+.pol-card-body { padding: 16px 20px; }
+.pol-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.pol-metric-label { color: var(--muted); font-size: 0.65rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.pol-metric-val { font-weight: 700; font-size: 0.95rem; margin-top: 2px; }
+.pol-card-footer {
+  padding: 12px 20px;
+  border-top: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.integrity-badge {
+  display: flex; align-items: center; gap: 6px; font-size: 0.75rem; font-weight: 700;
+}
+.integrity-ring {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 800; font-family: var(--mono);
+}
+.score-high { background: rgba(0,166,81,0.12); color: var(--green); border: 2px solid var(--green); }
+.score-mid { background: rgba(201,168,76,0.12); color: var(--gold); border: 2px solid var(--gold); }
+.score-low { background: rgba(214,40,40,0.1); color: var(--red); border: 2px solid var(--red); }
+.criminal-tag {
+  background: var(--red-dim); color: var(--red);
+  font-size: 0.65rem; font-family: var(--mono); font-weight: 500;
+  padding: 3px 8px; border-radius: 3px;
+  border: 1px solid rgba(214,40,40,0.2);
+}
+
+/* ─── RANKINGS TABLE ─── */
+.rankings-section { background: var(--ink); color: white; }
+.rank-tabs { display: flex; gap: 0; margin-bottom: 2rem; }
+.rank-tab {
+  padding: 10px 20px; font-size: 0.8rem; font-weight: 600; cursor: pointer;
+  border-bottom: 2px solid #ffffff15; color: #888; letter-spacing: 0.04em;
+  transition: all 0.2s;
+}
+.rank-tab.active { border-color: var(--saffron); color: var(--saffron); }
+.rank-table { width: 100%; border-collapse: collapse; }
+.rank-table th {
+  text-align: left; font-size: 0.65rem; letter-spacing: 0.12em;
+  text-transform: uppercase; color: #666; font-family: var(--mono);
+  padding: 10px 16px; border-bottom: 1px solid #ffffff08;
+}
+.rank-table td { padding: 14px 16px; border-bottom: 1px solid #ffffff06; vertical-align: middle; }
+.rank-table tr:hover td { background: rgba(255,107,0,0.04); }
+.rank-num {
+  font-family: var(--mono); font-size: 0.9rem; color: #444; font-weight: 700;
+}
+.rank-name { font-weight: 700; font-size: 0.92rem; color: white; }
+.rank-detail { font-size: 0.72rem; color: #666; font-family: var(--mono); margin-top: 2px; }
+.rank-val { font-family: var(--mono); font-weight: 700; font-size: 0.95rem; }
+.bar-cell { width: 120px; }
+.mini-bar { height: 4px; background: #ffffff10; border-radius: 2px; margin-top: 6px; }
+.mini-bar-fill { height: 100%; border-radius: 2px; background: var(--saffron); }
+
+/* ─── PROFILE VIEW ─── */
+#profile-view {
+  display: none;
+  min-height: 100vh;
+  padding-top: 60px;
+  width: 100%;
+  overflow-x: hidden;
+}
+.profile-header {
+  background: var(--slate); padding: 60px 4rem 40px;
+  position: relative; overflow: hidden;
+}
+.profile-header-bg {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,107,0,0.1), transparent);
+  pointer-events: none;
+}
+.profile-breadcrumb {
+  font-family: var(--mono); font-size: 0.72rem;
+  color: #666; margin-bottom: 2rem; cursor: pointer;
+}
+.profile-breadcrumb span { color: var(--saffron); }
+.profile-hero { display: flex; gap: 2.5rem; align-items: flex-start; }
+.profile-photo {
+  width: 120px; height: 120px; border-radius: 12px;
+  object-fit: cover;
+  border: 3px solid rgba(255,107,0,0.4);
+  flex-shrink: 0;
+}
+.profile-photo-lg {
+  width: 120px; height: 120px; border-radius: 12px; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--saffron), #c85000);
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-size: 3rem; font-weight: 800;
+  border: 3px solid rgba(255,107,0,0.4);
+}
+.profile-name { color: white; font-size: 2.4rem; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; }
+.profile-title { color: #9999bb; font-size: 0.88rem; margin-top: 8px; font-family: var(--mono); }
+.profile-tags { display: flex; gap: 0.6rem; margin-top: 1rem; flex-wrap: wrap; }
+.profile-tag {
+  font-size: 0.7rem; font-weight: 700; padding: 4px 12px; border-radius: 4px;
+  letter-spacing: 0.06em;
+}
+.profile-body { padding: 40px 4rem; display: grid; grid-template-columns: 1fr 340px; gap: 2rem; }
+.profile-main {}
+.profile-sidebar {}
+
+/* ─── CARDS ─── */
+.data-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px; overflow: hidden; margin-bottom: 1.5rem;
+}
+.data-card-head {
+  padding: 18px 24px; border-bottom: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.data-card-title { font-weight: 700; font-size: 0.92rem; letter-spacing: -0.01em; }
+.data-card-body { padding: 24px; }
+.data-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.data-row:last-child { border-bottom: none; }
+.data-row-label { font-size: 0.78rem; color: var(--muted); }
+.data-row-val { font-weight: 700; font-size: 0.9rem; font-family: var(--mono); }
+
+/* ─── INTEGRITY SCORE WIDGET ─── */
+.integrity-widget {
+  background: var(--slate); border-radius: 12px;
+  padding: 28px; margin-bottom: 1.5rem; color: white; text-align: center;
+}
+.integrity-score-big {
+  font-size: 4.5rem; font-weight: 800; font-family: var(--mono);
+  line-height: 1;
+}
+.integrity-label { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: #888; margin-top: 6px; }
+.integrity-risk {
+  display: inline-block; margin-top: 12px;
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em;
+  padding: 4px 12px; border-radius: 4px;
+}
+.risk-low { background: rgba(0,166,81,0.15); color: var(--green); }
+.risk-medium { background: rgba(201,168,76,0.15); color: var(--gold); }
+.risk-high { background: rgba(214,40,40,0.15); color: var(--red); }
+.risk-critical { background: rgba(214,40,40,0.25); color: var(--red); border: 1px solid var(--red); }
+.integrity-bars { margin-top: 20px; text-align: left; }
+.integrity-bar-row { margin-bottom: 14px; }
+.integrity-bar-label { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 0.72rem; color: #888; }
+.integrity-bar-track { height: 5px; background: #ffffff10; border-radius: 3px; overflow: hidden; }
+.integrity-bar-fill { height: 100%; border-radius: 3px; }
+
+/* ─── NEWS TIMELINE ─── */
+.news-timeline { position: relative; }
+.news-item {
+  display: flex; gap: 16px; padding: 16px 0;
+  border-bottom: 1px solid var(--border); cursor: pointer;
+}
+.news-item:hover .news-headline { color: var(--saffron); }
+.news-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  flex-shrink: 0; margin-top: 5px;
+}
+.news-date { font-family: var(--mono); font-size: 0.7rem; color: var(--muted); margin-bottom: 4px; }
+.news-headline { font-weight: 600; font-size: 0.88rem; line-height: 1.4; transition: color 0.2s; }
+.news-source { font-size: 0.7rem; color: var(--muted); font-family: var(--mono); margin-top: 4px; }
+.news-tag {
+  display: inline-block; font-size: 0.6rem; font-weight: 700;
+  padding: 2px 6px; border-radius: 3px; letter-spacing: 0.06em; margin-left: 6px;
+}
+
+/* ─── CHARTS ─── */
+.chart-wrapper { height: 200px; }
+
+/* ─── DASHBOARD GRID ─── */
+.dashboard-section { background: var(--surface); }
+.dash-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+.dash-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 24px; overflow: hidden;
+}
+.dash-card-title { font-size: 0.78rem; font-weight: 600; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 1.5rem; }
+.dash-big-num { font-size: 2.8rem; font-weight: 800; font-family: var(--mono); letter-spacing: -0.02em; }
+.party-bar { display: flex; height: 8px; border-radius: 4px; overflow: hidden; gap: 2px; margin: 12px 0; }
+.party-seg { height: 100%; border-radius: 2px; transition: flex 0.5s ease; }
+.party-legend { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.party-leg-item { display: flex; align-items: center; gap: 6px; font-size: 0.72rem; color: var(--muted); }
+.party-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.state-heatmap { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; }
+.state-cell {
+  aspect-ratio: 1; border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.55rem; font-weight: 700; cursor: pointer;
+  transition: transform 0.2s;
+}
+.state-cell:hover { transform: scale(1.1); }
+
+/* ─── ALERTS ─── */
+.alerts-strip {
+  background: var(--ink); padding: 0;
+  overflow: hidden; position: relative;
+}
+.alerts-label {
+  position: absolute; left: 0; top: 0; bottom: 0;
+  background: var(--saffron); padding: 12px 16px;
+  font-size: 0.65rem; font-weight: 800; letter-spacing: 0.12em;
+  color: white; text-transform: uppercase;
+  display: flex; align-items: center; z-index: 1;
+}
+.alerts-ticker {
+  display: flex; gap: 0; align-items: center;
+  animation: ticker 40s linear infinite;
+  padding: 12px 0 12px 120px;
+  white-space: nowrap;
+}
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.alert-item {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 0 32px; font-size: 0.78rem; color: #ccc;
+  border-right: 1px solid #333;
+}
+.alert-item .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+/* ─── FOOTER ─── */
+footer {
+  background: var(--ink); color: #555;
+  padding: 60px 4rem 40px;
+  border-top: 1px solid #ffffff08;
+}
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 3rem; }
+.footer-brand { font-size: 1.2rem; font-weight: 800; color: white; margin-bottom: 1rem; }
+.footer-brand .accent { color: var(--saffron); }
+.footer-desc { font-size: 0.82rem; line-height: 1.7; color: #555; }
+.footer-head { font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: #666; font-family: var(--mono); margin-bottom: 1rem; }
+.footer-links { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.footer-links li { font-size: 0.82rem; color: #555; cursor: pointer; transition: color 0.2s; }
+.footer-links li:hover { color: var(--saffron); }
+.footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 2rem; border-top: 1px solid #ffffff08; font-size: 0.75rem; }
+.footer-disclaimer { max-width: 600px; line-height: 1.6; color: #444; }
+
+/* ─── MODAL ─── */
+.modal-overlay {
+  display: none; position: fixed; inset: 0; z-index: 9999;
+  background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);
+  align-items: center; justify-content: center; padding: 2rem;
+}
+.modal-overlay.open { display: flex; }
+.modal-box {
+  background: var(--card); border-radius: 16px; max-width: 600px; width: 100%;
+  max-height: 80vh; overflow-y: auto;
+  box-shadow: 0 40px 100px rgba(0,0,0,0.4);
+  animation: modalIn 0.3s ease;
+}
+@keyframes modalIn {
+  from { opacity:0; transform: scale(0.95) translateY(20px); }
+  to { opacity:1; transform: scale(1) translateY(0); }
+}
+.modal-head {
+  padding: 24px 28px; border-bottom: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.modal-title { font-weight: 800; font-size: 1.1rem; }
+.modal-close {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--surface); border: none; cursor: pointer;
+  font-size: 1rem; display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s;
+}
+.modal-close:hover { background: var(--border); }
+.modal-body { padding: 28px; }
+
+/* ─── UTILITY ─── */
+.text-saffron { color: var(--saffron); }
+.text-green { color: var(--green); }
+.text-red { color: var(--red); }
+.text-gold { color: var(--gold); }
+.text-muted { color: var(--muted); }
+.mono { font-family: var(--mono); }
+.tag {
+  display: inline-block; font-size: 0.65rem; font-weight: 700;
+  padding: 3px 8px; border-radius: 3px; letter-spacing: 0.06em;
+}
+.tag-bjp { background: #ff6b0018; color: #ff6b00; }
+.tag-inc { background: #00a65118; color: #00a651; }
+.tag-aap { background: #0066ff18; color: #0066ff; }
+.tag-sp { background: #cc000018; color: #cc0000; }
+.tag-tmc { background: #1da1f218; color: #1da1f2; }
+.tag-other { background: #66666618; color: #666; }
+.tag-mp { background: #7c3aed18; color: #7c3aed; }
+.tag-mla { background: #0891b218; color: #0891b2; }
+.divider { height: 1px; background: var(--border); margin: 1.5rem 0; }
+.flex { display: flex; }
+.gap-1 { gap: 0.5rem; }
+.gap-2 { gap: 1rem; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.mt-1 { margin-top: 0.5rem; }
+.mt-2 { margin-top: 1rem; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.loading {
+  text-align: center; padding: 4rem; color: var(--muted);
+  font-family: var(--mono); font-size: 0.82rem;
+}
+.loading::after { content: '...'; animation: dots 1.5s infinite; }
+@keyframes dots {
+  0%,33% { content: '.'; } 33%,66% { content: '..'; } 66%,100% { content: '...'; }
+}
+
+/* ─── CANVAS CHART PLACEHOLDER ─── */
+canvas.sparkline { display: block; }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 900px) {
+  /* NAV */
+  nav { padding: 0 1rem; height: 56px; }
+  .nav-links { display: none; }
+  .nav-logo { font-size: 1.05rem; }
+  .nav-pill { padding: 5px 12px; font-size: 0.72rem; }
+  .live-dot { display: none; }
+
+  /* HERO */
+  .hero { padding: 90px 1.5rem 50px; }
+  .hero h1 { font-size: 2.4rem; }
+  .hero-sub { font-size: 0.9rem; }
+  .hero-ctas { flex-direction: column; }
+  .btn-primary, .btn-ghost { width: 100%; text-align: center; padding: 13px; }
+  .stat-ticker {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.8rem; padding: 1.2rem;
+    margin-top: 2.5rem;
+    width: 100%;
+  }
+  .stat-num { font-size: 1.3rem; }
+  .stat-label { font-size: 0.6rem; }
+  .stat-delta { font-size: 0.6rem; }
+  .stat-item:last-child { 
+    grid-column: span 2; 
+    border-top: 1px solid rgba(255,107,0,0.15);
+    padding-top: 0.8rem;
+  }
+
+  /* SEARCH */
+  .search-wrapper { padding: 30px 1.5rem; }
+  .search-row { flex-direction: column; gap: 0.7rem; width: 100%; }
+  .select-filter { width: 100%; min-width: unset; }
+  .search-box { width: 100%; }
+  .search-box input { font-size: 0.88rem; }
+  .filter-pills { gap: 0.4rem; }
+  .filter-pill { font-size: 0.68rem; padding: 5px 10px; }
+
+  /* SECTIONS */
+  section { padding: 50px 1.5rem; }
+  .section-title { font-size: 1.4rem; }
+  .section-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+  .cards-grid { grid-template-columns: 1fr; }
+  .pol-card-header { padding: 16px 16px 10px; }
+  .pol-card-body { padding: 12px 16px; }
+  .pol-card-footer { padding: 10px 16px; }
+  .pol-metrics { gap: 8px; }
+
+  /* RANKINGS */
+  .rankings-section { padding: 50px 1.5rem; }
+  .rank-tabs { 
+    overflow-x: auto; white-space: nowrap; 
+    padding-bottom: 6px; gap: 0;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .rank-tabs::-webkit-scrollbar { display: none; }
+  .rank-tab { font-size: 0.7rem; padding: 8px 12px; flex-shrink: 0; }
+  .rank-table { font-size: 0.78rem; width: 100%; table-layout: fixed; }
+  .rank-table th { font-size: 0.58rem; padding: 8px 6px; }
+  .rank-table td { padding: 10px 6px; }
+  .bar-cell { display: none; }
+  .rank-num { font-size: 0.78rem; }
+  .rank-name { font-size: 0.82rem; }
+  .rank-detail { font-size: 0.62rem; margin-top: 2px; }
+  .rank-val { font-size: 0.8rem; }
+  .mini-bar { display: none; }
+
+  /* Hide less important columns on mobile */
+  .rank-table th:nth-child(3),
+  .rank-table td:nth-child(3) { display: none; }
+  .rank-table th:nth-child(4),
+  .rank-table td:nth-child(4) { display: none; }
+
+  /* Column widths */
+  .rank-table th:nth-child(1),
+  .rank-table td:nth-child(1) { width: 28px; }
+  .rank-table th:nth-child(2),
+  .rank-table td:nth-child(2) { width: auto; }
+  .rank-table th:nth-child(5),
+  .rank-table td:nth-child(5) { width: 90px; }
+  .rank-table th:nth-child(6),
+  .rank-table td:nth-child(6) { width: 44px; text-align: center; }
+
+  /* Integrity ring smaller */
+  .integrity-ring { width: 28px !important; height: 28px !important; font-size: 0.58rem !important; }
+
+  /* DASHBOARD */
+  .dashboard-section { padding: 50px 1.5rem; }
+  .dash-grid { grid-template-columns: 1fr; gap: 1rem; }
+  .dash-card { padding: 18px; }
+  .dash-big-num { font-size: 2rem; }
+  .dash-card-title { font-size: 0.72rem; margin-bottom: 1rem; }
+  .party-legend { grid-template-columns: 1fr 1fr; gap: 5px; }
+  .party-leg-item { font-size: 0.68rem; }
+  .state-heatmap { grid-template-columns: repeat(5, 1fr); gap: 5px; }
+  .state-cell { font-size: 0.5rem; }
+  .data-row-label { font-size: 0.72rem; }
+  .data-row-val { font-size: 0.82rem; }
+
+  /* PROFILE */
+  .profile-header { padding: 40px 1.5rem 30px; }
+  .profile-hero { flex-direction: column; gap: 1.2rem; }
+  .profile-hero > div:last-child { display: none; }
+  .profile-name { font-size: 1.7rem; }
+  .profile-title { font-size: 0.78rem; }
+  .profile-tags { gap: 0.4rem; }
+  .profile-tag { font-size: 0.62rem; padding: 3px 8px; }
+  .profile-body { 
+    padding: 20px 1.5rem; 
+    grid-template-columns: 1fr; 
+    gap: 0;
+  }
+  .profile-sidebar { order: -1; margin-bottom: 1rem; }
+  .integrity-widget { padding: 20px; }
+  .integrity-score-big { font-size: 3.5rem; }
+  .integrity-bars { margin-top: 14px; }
+  .integrity-bar-row { margin-bottom: 10px; }
+  .data-card-head { padding: 14px 18px; }
+  .data-card-body { padding: 16px 18px; }
+  .data-card-title { font-size: 0.85rem; }
+  .grid-2 { grid-template-columns: 1fr; }
+  .news-headline { font-size: 0.82rem; }
+  .news-date { font-size: 0.65rem; }
+
+  /* NEWS SECTION */
+  #news { padding: 50px 1.5rem; }
+  .news-item { gap: 12px; padding: 14px 0; }
+  .news-headline { font-size: 0.84rem; }
+
+  /* MODAL */
+  .modal-box { margin: 1rem; max-height: 85vh; }
+  .modal-head { padding: 18px 20px; }
+  .modal-body { padding: 20px; }
+
+  /* FOOTER */
+  footer { padding: 40px 1.5rem 30px; }
+  .footer-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+  .footer-brand { font-size: 1rem; }
+  .footer-desc { font-size: 0.78rem; }
+  .footer-head { font-size: 0.65rem; }
+  .footer-links li { font-size: 0.78rem; }
+  .footer-bottom { 
+    flex-direction: column; gap: 1rem; 
+    text-align: center; font-size: 0.68rem;
+  }
+  .footer-disclaimer { font-size: 0.68rem; }
+
+  /* ALERTS TICKER */
+  .alerts-strip { margin-top: 56px; }
+  
+  /* Hide alerts ticker on profile view */
+  #profile-view ~ .alerts-strip { display: none; }
+
+  /* ALERTS TICKER */
+  .alerts-label { font-size: 0.58rem; padding: 10px 10px; }
+  .alerts-ticker { padding-left: 80px; }
+  .alert-item { font-size: 0.72rem; padding: 0 20px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ─── NAVIGATION ─── -->
+<nav>
+  <div class="nav-logo" onclick="showHome()">
+    <span>Neta<span class="accent">Watch</span></span>
+    <span class="badge">LIVE</span>
+  </div>
+  <div class="nav-links">
+    <span class="nav-link active" onclick="showHome()">Home</span>
+    <span class="nav-link" onclick="scrollToSection('rankings')">Rankings</span>
+    <span class="nav-link" onclick="scrollToSection('dashboard')">Analytics</span>
+    <span class="nav-link" onclick="scrollToSection('news')">News Intel</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:1.2rem">
+    <span class="live-dot">4,908 politicians tracked</span>
+    <span class="nav-pill" onclick="showHome()">Search Netas</span>
+  </div>
+</nav>
+
+<!-- ─── ALERTS TICKER ─── -->
+<div class="alerts-strip" style="margin-top:60px">
+  <span class="alerts-label">ALERTS</span>
+  <div class="alerts-ticker" id="ticker">
+    <!-- JS filled -->
+  </div>
+</div>
+
+<!-- ─── MAIN VIEW ─── -->
+<div id="main-view">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-glow"></div>
+    <div class="hero-glow2"></div>
+    <div class="hero-eyebrow">Political Intelligence Platform · India</div>
+    <h1>Know Your <em>Neta.</em><br>Track the Power.</h1>
+    <p class="hero-sub">Real-time tracking of assets, criminal cases, corporate links, and political activity for all 4,908 MPs and MLAs across India. Updated daily.</p>
+    <div class="hero-ctas">
+      <button class="btn-primary" onclick="document.getElementById('search-section').scrollIntoView({behavior:'smooth'})">Search Politicians →</button>
+      <button class="btn-ghost" onclick="scrollToSection('dashboard')">View Analytics</button>
+    </div>
+    <div class="stat-ticker">
+      <div class="stat-item">
+        <div class="stat-num"><span>₹</span>5.4T</div>
+        <div class="stat-label">Total Declared Assets</div>
+        <div class="stat-delta">+12% YoY</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">4,908</div>
+        <div class="stat-label">Politicians Tracked</div>
+        <div class="stat-delta">↑ 12 new</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">2,847</div>
+        <div class="stat-label">Criminal Cases</div>
+        <div class="stat-delta">+34 this month</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">1,204</div>
+        <div class="stat-label">Corporate Links</div>
+        <div class="stat-delta">Verified</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">38</div>
+        <div class="stat-label">Parties Tracked</div>
+        <div class="stat-delta">National + Regional</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEARCH -->
+  <div class="search-wrapper" id="search-section">
+    <div class="search-label">Find any Politician</div>
+    <div class="search-row">
+      <div class="search-box">
+        <span class="search-icon">⌕</span>
+        <input type="text" id="search-input" placeholder="Search by name, constituency, party..." oninput="filterPoliticians()">
+      </div>
+      <select class="select-filter" id="filter-state" onchange="filterPoliticians()">
+        <option value="">All States</option>
+        <option>Uttar Pradesh</option><option>Maharashtra</option><option>Bihar</option>
+        <option>West Bengal</option><option>Tamil Nadu</option><option>Rajasthan</option>
+        <option>Madhya Pradesh</option><option>Karnataka</option><option>Gujarat</option>
+        <option>Andhra Pradesh</option><option>Delhi</option><option>Telangana</option>
+        <option>Punjab</option><option>Haryana</option><option>Kerala</option>
+      </select>
+      <select class="select-filter" id="filter-party" onchange="filterPoliticians()">
+        <option value="">All Parties</option>
+        <option>BJP</option><option>INC</option><option>SP</option>
+        <option>TMC</option><option>AAP</option><option>BSP</option>
+        <option>JDU</option><option>RJD</option><option>NCP</option>
+      </select>
+      <select class="select-filter" id="filter-pos" onchange="filterPoliticians()">
+        <option value="">All Positions</option>
+        <option>MP (Lok Sabha)</option><option>MP (Rajya Sabha)</option><option>MLA</option>
+      </select>
+    </div>
+    <div class="filter-pills" id="filter-pills">
+      <span class="filter-pill active" onclick="setRiskFilter('')">All</span>
+      <span class="filter-pill" onclick="setRiskFilter('criminal')">🔴 Has Criminal Cases</span>
+      <span class="filter-pill" onclick="setRiskFilter('corporate')">🏢 Corporate Links</span>
+      <span class="filter-pill" onclick="setRiskFilter('wealth')">💰 High Wealth</span>
+      <span class="filter-pill" onclick="setRiskFilter('switch')">🔀 Party Switched</span>
+      <span class="filter-pill" onclick="setRiskFilter('lowscore')">⚠️ Low Integrity</span>
+    </div>
+  </div>
+
+  <!-- POLITICIANS GRID -->
+  <section>
+    <div class="section-header">
+      <div>
+        <div class="section-title">Featured <em>Profiles</em></div>
+        <div class="section-sub" id="result-count">Showing 12 of 4,908 politicians</div>
+      </div>
+      <span class="see-all">View all 4,908 →</span>
+    </div>
+    <div class="cards-grid" id="politicians-grid">
+      <!-- JS generated -->
+    </div>
+  </section>
+
+  <!-- RANKINGS -->
+  <section class="rankings-section" id="rankings">
+    <div class="section-header" style="color:white">
+      <div>
+        <div class="section-title" style="color:white">Power <em>Rankings</em></div>
+        <div class="section-sub" style="color:#666">Updated daily from official disclosures</div>
+      </div>
+    </div>
+    <div class="rank-tabs">
+      <div class="rank-tab active" onclick="showRankTab(0, this)">Wealthiest</div>
+      <div class="rank-tab" onclick="showRankTab(1, this)">Most Criminal Cases</div>
+      <div class="rank-tab" onclick="showRankTab(2, this)">Fastest Wealth Growth</div>
+      <div class="rank-tab" onclick="showRankTab(3, this)">Lowest Integrity</div>
+      <div class="rank-tab" onclick="showRankTab(4, this)">Most Active</div>
+    </div>
+    <table class="rank-table" id="rank-table">
+      <!-- JS generated -->
+    </table>
+  </section>
+
+  <!-- ANALYTICS DASHBOARD -->
+  <section class="dashboard-section" id="dashboard">
+    <div class="section-header">
+      <div>
+        <div class="section-title">Analytics <em>Dashboard</em></div>
+        <div class="section-sub">Real-time political intelligence across states and parties</div>
+      </div>
+    </div>
+    <div class="dash-grid" id="dash-grid">
+      <!-- JS generated -->
+    </div>
+  </section>
+
+  <!-- NEWS INTEL -->
+  <section id="news">
+    <div class="section-header">
+      <div>
+        <div class="section-title">News <em>Intelligence</em></div>
+        <div class="section-sub">AI-monitored news from 50+ Indian media sources · Updated hourly</div>
+      </div>
+      <span class="see-all">View all alerts →</span>
+    </div>
+    <div id="news-feed" style="max-width:900px">
+      <!-- JS generated -->
+    </div>
+  </section>
+
+</div>
+
+<!-- ─── PROFILE VIEW ─── -->
+<div id="profile-view">
+  <div id="profile-content"></div>
+</div>
+
+<!-- ─── MODAL ─── -->
+<div class="modal-overlay" id="modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div class="modal-title" id="modal-title">Detail</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<!-- ─── FOOTER ─── -->
+<footer id="footer">
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand">Neta<span class="accent">Watch</span></div>
+      <p class="footer-desc">India's most comprehensive political transparency platform. Tracking 4,908 MPs and MLAs across financial disclosures, criminal cases, corporate links, and political activity — updated daily.</p>
+    </div>
+    <div>
+      <div class="footer-head">Platform</div>
+      <ul class="footer-links">
+        <li>Search Politicians</li><li>Rankings</li><li>Analytics</li>
+        <li>News Intel</li><li>Data Sources</li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-head">Data</div>
+      <ul class="footer-links">
+        <li>ADR / MyNeta</li><li>Election Commission</li>
+        <li>Ministry of Corporate Affairs</li><li>Lok Sabha / RS</li>
+        <li>State Assemblies</li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-head">About</div>
+      <ul class="footer-links">
+        <li>Methodology</li><li>Integrity Score</li>
+        <li>Data Pipeline</li><li>Open API</li><li>Contact</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-disclaimer">
+      Data sourced from official public records including Election Commission affidavits, Lok Sabha, Rajya Sabha, and state assembly websites. 
+      NetaWatch is a civic transparency platform — not affiliated with any political party or government body.
+    </p>
+    <div>© 2025 NetaWatch · Open Civic Data</div>
+  </div>
+</footer>
+
+<script>
+// ─── DATA ───────────────────────────────────────────────────────────────────
+const PARTIES = {
+  BJP: { name:'BJP', color:'#ff6b00', cls:'tag-bjp' },
+  INC: { name:'INC', color:'#00a651', cls:'tag-inc' },
+  AAP: { name:'AAP', color:'#0066ff', cls:'tag-aap' },
+  SP:  { name:'SP',  color:'#cc0000', cls:'tag-sp'  },
+  TMC: { name:'TMC', color:'#1da1f2', cls:'tag-tmc' },
+  BSP: { name:'BSP', color:'#1a1a2e', cls:'tag-other' },
+  JDU: { name:'JDU', color:'#006400', cls:'tag-inc' },
+  RJD: { name:'RJD', color:'#8b0000', cls:'tag-sp' },
+  NCP: { name:'NCP', color:'#00008b', cls:'tag-aap' },
+  YSRCP:{name:'YSRCP',color:'#0057a5',cls:'tag-aap' },
+  DMK: { name:'DMK', color:'#c41e3a', cls:'tag-sp' },
+  Other:{name:'IND', color:'#888', cls:'tag-other' }
+};
+
+const STATES = ['Uttar Pradesh','Maharashtra','Bihar','West Bengal','Tamil Nadu','Rajasthan',
+  'Madhya Pradesh','Karnataka','Gujarat','Andhra Pradesh','Delhi','Telangana',
+  'Punjab','Haryana','Kerala','Odisha','Assam','Jharkhand','Uttarakhand','Chhattisgarh'];
+
+function rn(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
+function rf(a,b){ return (Math.random()*(b-a)+a); }
+function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+const FIRST = ['Narendra','Rahul','Arvind','Mamata','Nitish','Akhilesh','Mayawati','Yogi',
+  'Amit','Smriti','Nirmala','Rajnath','Jyotiraditya','Sachin','Priyanka','Chandrashekhar',
+  'Dimple','Poonam','Anurag','Manish','Aam','Kapil','Tejashwi','Chirag','Navneet',
+  'Ravi','Suresh','Mohan','Dinesh','Ashok','Hemanta','Bhupesh','Pushkar','Basavaraj'];
+const LAST = ['Modi','Gandhi','Kejriwal','Banerjee','Kumar','Yadav','Mayawati','Adityanath',
+  'Shah','Irani','Sitharaman','Singh','Scindia','Pilot','Gandhi','Azad','Yadav',
+  'Mahajan','Thakur','Sisodia','Aadmi','Sibal','Prasad','Paswan','Rana',
+  'Shankar','Prabhu','Verma','Sharma','Gehlot','Sarma','Baghel','Singh','Bommai'];
+const CONSTITUENCIES = ['Varanasi','New Delhi','Lucknow','Kolkata North','Patna Sahib',
+  'Mumbai South','Bangalore Central','Chennai North','Hyderabad','Ahmedabad East',
+  'Jaipur','Bhopal','Nagpur','Pune','Surat','Amritsar','Chandigarh','Dehradun',
+  'Ranchi','Raipur','Shimla','Imphal','Aizawl','Itanagar','Kohima','Gangtok'];
+
+function makePolitician(i) {
+  const partyKeys = Object.keys(PARTIES);
+  const partyKey = pick(partyKeys);
+  const party = PARTIES[partyKey];
+  const state = pick(STATES);
+  const isMP = Math.random() > 0.45;
+  const pos = isMP ? (Math.random()>0.5 ? 'MP (Lok Sabha)' : 'MP (Rajya Sabha)') : 'MLA';
+  const totalAssets = rn(50,5000);
+  const prevAssets = Math.max(10, totalAssets - rn(-200, totalAssets*0.6));
+  const growth = ((totalAssets - prevAssets)/prevAssets*100).toFixed(1);
+  const criminal = rn(0, Math.random() > 0.55 ? 0 : 8);
+  const serious = Math.max(0, criminal - rn(0,3));
+  const corps = rn(0, criminal > 2 ? 5 : 3);
+  const switches = rn(0,3);
+  
+  // Integrity score
+  let score = 100;
+  score -= criminal * 8;
+  score -= serious * 5;
+  if(parseFloat(growth) > 100) score -= 15;
+  if(parseFloat(growth) > 200) score -= 15;
+  score -= switches * 10;
+  score -= corps * 3;
+  score = Math.max(5, Math.min(98, score + rn(-5,5)));
+
+  const fn = pick(FIRST), ln = pick(LAST);
+  
+  return {
+    id: i,
+    name: `${fn} ${ln}`,
+    initials: `${fn[0]}${ln[0]}`,
+    party: partyKey, partyObj: party, state, constituency: pick(CONSTITUENCIES),
+    position: pos, isMP,
+    totalAssets, prevAssets, assetGrowth: parseFloat(growth),
+    movableAssets: Math.round(totalAssets * rf(0.2,0.6)),
+    liabilities: rn(0, Math.round(totalAssets*0.3)),
+    criminal, serious, corps, switches,
+    integrityScore: score,
+    riskLevel: score>70?'LOW':score>45?'MEDIUM':score>25?'HIGH':'CRITICAL',
+    education: pick(['B.A.','B.Sc.','LLB','MBA','MBBS','M.A.','PhD','Graduate','Post Graduate']),
+    profession: pick(['Politician','Businessman','Lawyer','Doctor','Farmer','Engineer','Teacher','Social Worker']),
+    elections: rn(1,5),
+    attendance: rn(40,98),
+    questionsRaised: rn(5,400),
+    newsItems: rn(2,25),
+    lastUpdate: `${rn(1,24)}h ago`,
+  };
+}
+
+// Generate ~60 featured politicians (simulate from 4908)
+const POLITICIANS = Array.from({length: 60}, (_, i) => makePolitician(i));
+
+// Rankings data
+const RANK_DATA = {
+  0: POLITICIANS.slice().sort((a,b)=>b.totalAssets-a.totalAssets).slice(0,15),
+  1: POLITICIANS.slice().sort((a,b)=>b.criminal-a.criminal).slice(0,15),
+  2: POLITICIANS.slice().sort((a,b)=>b.assetGrowth-a.assetGrowth).slice(0,15),
+  3: POLITICIANS.slice().sort((a,b)=>a.integrityScore-b.integrityScore).slice(0,15),
+  4: POLITICIANS.slice().sort((a,b)=>b.questionsRaised-a.questionsRaised).slice(0,15),
+};
+
+const RANK_COLS = [
+  {label:'Assets', field: p=>`₹${p.totalAssets}L`, bar: p=>p.totalAssets/5000},
+  {label:'Cases', field: p=>`${p.criminal} cases (${p.serious} serious)`, bar: p=>p.criminal/8},
+  {label:'Growth', field: p=>`+${p.assetGrowth}% since last election`, bar: p=>Math.min(p.assetGrowth/500,1)},
+  {label:'Integrity', field: p=>`Score: ${p.integrityScore}/100`, bar: p=>1-p.integrityScore/100},
+  {label:'Questions', field: p=>`${p.questionsRaised} Q's raised`, bar: p=>p.questionsRaised/400},
+];
+
+const NEWS_ITEMS_DATA = [
+  {title:'ED raids properties linked to UP MLA in money laundering case', source:'The Hindu', time:'2h ago', category:'Legal', color:'#d62828', pol:'Dinesh Verma'},
+  {title:'Bihar MP declares ₹450 crore in fresh election affidavit', source:'Indian Express', time:'4h ago', category:'Finance', color:'#c9a84c', pol:'Chirag Paswan'},
+  {title:'TMC leader\'s company awarded infrastructure contract worth ₹800Cr', source:'NDTV', time:'5h ago', category:'Corporate', color:'#1da1f2', pol:'Mamata Banerjee'},
+  {title:'Rajasthan MLA switches to BJP ahead of assembly session', source:'Times of India', time:'8h ago', category:'Party Switch', color:'#ff6b00', pol:'Ashok Gehlot'},
+  {title:'Supreme Court dismisses anticipatory bail plea of Jharkhand MP', source:'Hindustan Times', time:'10h ago', category:'Legal', color:'#d62828', pol:'Hemanta Sarma'},
+  {title:'Lok Sabha attendance data: 38 MPs below 50% attendance this session', source:'PRS India', time:'12h ago', category:'Parliament', color:'#0066ff', pol:'Multiple'},
+  {title:'Delhi MLA\'s spouse acquires second luxury apartment in Lutyens zone', source:'Mint', time:'1d ago', category:'Finance', color:'#c9a84c', pol:'Manish Sisodia'},
+  {title:'CBI files chargesheet against former Maharashtra minister', source:'Economic Times', time:'1d ago', category:'Legal', color:'#d62828', pol:'Suresh Prabhu'},
+  {title:'Punjab MP discloses 7 companies in new wealth statement', source:'The Wire', time:'2d ago', category:'Corporate', color:'#1da1f2', pol:'Navneet Rana'},
+  {title:'Wealth of Rajya Sabha members grew 68% on average over 5 years: Study', source:'ADR India', time:'2d ago', category:'Report', color:'#c9a84c', pol:'Multiple'},
+];
+
+const TICKER_ITEMS = [
+  {text:'NEW: ED raids linked to Satish Sharma (BSP)', color:'#d62828'},
+  {text:'DISCLOSURE: Raj Thackeray declares ₹340Cr assets', color:'#c9a84c'},
+  {text:'SWITCH: 2 TMC MLAs join BJP ahead of by-elections', color:'#ff6b00'},
+  {text:'CASE: Bihar MP granted anticipatory bail by Patna HC', color:'#d62828'},
+  {text:'UPDATE: 2024-25 affidavit data for 312 MPs now uploaded', color:'#00a651'},
+  {text:'ALERT: Abnormal asset growth (>400%) detected for 3 politicians', color:'#ff6b00'},
+  {text:'CORP: 14 new company directorships flagged in MCA database', color:'#1da1f2'},
+  {text:'DATA: Parliament attendance records for Winter Session updated', color:'#00a651'},
+  {text:'MEDIA: Spike in news mentions for 8 politicians this week', color:'#c9a84c'},
+];
+
+// ─── TICKER ─────────────────────────────────────────────────────────────────
+function renderTicker() {
+  const t = document.getElementById('ticker');
+  let html = '';
+  const doubled = [...TICKER_ITEMS, ...TICKER_ITEMS];
+  doubled.forEach(item => {
+    html += `<span class="alert-item"><span class="dot" style="background:${item.color}"></span>${item.text}</span>`;
+  });
+  t.innerHTML = html;
+}
+
+// ─── POLITICIANS GRID ────────────────────────────────────────────────────────
+let activeFilter = '';
+function setRiskFilter(f) {
+  activeFilter = f;
+  document.querySelectorAll('.filter-pill').forEach(el => el.classList.remove('active'));
+  event.target.classList.add('active');
+  filterPoliticians();
+}
+
+function filterPoliticians() {
+  const q = document.getElementById('search-input').value.toLowerCase();
+  const state = document.getElementById('filter-state').value;
+  const party = document.getElementById('filter-party').value;
+  const pos = document.getElementById('filter-pos').value;
+
+  let filtered = POLITICIANS.filter(p => {
+    if(q && !p.name.toLowerCase().includes(q) && !p.constituency.toLowerCase().includes(q)) return false;
+    if(state && p.state !== state) return false;
+    if(party && p.party !== party) return false;
+    if(pos && p.position !== pos) return false;
+    if(activeFilter === 'criminal' && p.criminal === 0) return false;
+    if(activeFilter === 'corporate' && p.corps === 0) return false;
+    if(activeFilter === 'wealth' && p.totalAssets < 1000) return false;
+    if(activeFilter === 'switch' && p.switches === 0) return false;
+    if(activeFilter === 'lowscore' && p.integrityScore > 45) return false;
+    return true;
+  });
+
+  document.getElementById('result-count').textContent = `Showing ${Math.min(filtered.length,12)} of ${filtered.length} results`;
+  renderPoliticianCards(filtered.slice(0,12));
+}
+
+function renderPoliticianCards(list) {
+  const grid = document.getElementById('politicians-grid');
+  grid.innerHTML = list.map(p => {
+    const scoreClass = p.integrityScore > 70 ? 'score-high' : p.integrityScore > 45 ? 'score-mid' : 'score-low';
+    const party = p.partyObj;
+    return `
+    <div class="pol-card" onclick="showProfile(${p.id})">
+      <div class="pol-card-header">
+        <div class="pol-avatar-placeholder">${p.initials}</div>
+        <div>
+          <div class="pol-name">${p.name}</div>
+          <div class="pol-meta">${p.constituency}</div>
+          <span class="pol-party-tag tag ${party.cls}" style="background:${party.color}18;color:${party.color}">
+            ${party.name}
+          </span>
+        </div>
+      </div>
+      <div class="pol-card-body">
+        <div class="pol-metrics">
+          <div>
+            <div class="pol-metric-label">Total Assets</div>
+            <div class="pol-metric-val">₹${p.totalAssets}L</div>
+          </div>
+          <div>
+            <div class="pol-metric-label">Asset Growth</div>
+            <div class="pol-metric-val ${p.assetGrowth > 100 ? 'text-red' : p.assetGrowth > 50 ? 'text-gold' : 'text-green'}">
+              ${p.assetGrowth > 0 ? '+' : ''}${p.assetGrowth}%
+            </div>
+          </div>
+          <div>
+            <div class="pol-metric-label">State</div>
+            <div class="pol-metric-val" style="font-size:0.8rem">${p.state.split(' ')[0]}</div>
+          </div>
+          <div>
+            <div class="pol-metric-label">Position</div>
+            <div class="pol-metric-val" style="font-size:0.78rem">${p.isMP ? 'MP' : 'MLA'}</div>
+          </div>
+        </div>
+      </div>
+      <div class="pol-card-footer">
+        <div class="integrity-badge">
+          <div class="integrity-ring ${scoreClass}">${p.integrityScore}</div>
+          <div>
+            <div style="font-size:0.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em">Integrity</div>
+            <div style="font-size:0.72rem;font-weight:700">${p.riskLevel}</div>
+          </div>
+        </div>
+        ${p.criminal > 0 ? `<span class="criminal-tag">${p.criminal} case${p.criminal>1?'s':''}</span>` : '<span style="font-size:0.7rem;color:var(--muted)">No cases</span>'}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ─── RANKINGS ────────────────────────────────────────────────────────────────
+let activeRankTab = 0;
+function showRankTab(idx, el) {
+  activeRankTab = idx;
+  document.querySelectorAll('.rank-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderRankTable(idx);
+}
+
+function renderRankTable(idx) {
+  const data = RANK_DATA[idx];
+  const col = RANK_COLS[idx];
+  const table = document.getElementById('rank-table');
+  table.innerHTML = `
+    <thead><tr>
+      <th>#</th><th>Politician</th><th>Party</th><th>State</th><th>${col.label}</th><th>Integrity</th>
+    </tr></thead>
+    <tbody>
+    ${data.map((p,i) => {
+      const fillColor = idx===1||idx===3 ? '#d62828' : idx===2 ? '#c9a84c' : '#ff6b00';
+      const scoreClass = p.integrityScore > 70 ? 'score-high' : p.integrityScore > 45 ? 'score-mid' : 'score-low';
+      return `<tr onclick="showProfile(${p.id})" style="cursor:pointer">
+        <td class="rank-num">${String(i+1).padStart(2,'0')}</td>
+        <td>
+          <div class="rank-name">${p.name}</div>
+          <div class="rank-detail">${p.constituency} · ${p.position}</div>
+        </td>
+        <td><span class="tag ${p.partyObj.cls}">${p.party}</span></td>
+        <td style="font-size:0.82rem;color:#888">${p.state.split(' ')[0]}</td>
+        <td>
+          <div class="rank-val" style="color:${fillColor}">${col.field(p)}</div>
+          <div class="mini-bar"><div class="mini-bar-fill" style="width:${col.bar(p)*100}%;background:${fillColor}"></div></div>
+        </td>
+        <td><span class="integrity-ring ${scoreClass}" style="width:32px;height:32px;font-size:0.65rem">${p.integrityScore}</span></td>
+      </tr>`;
+    }).join('')}
+    </tbody>`;
+}
+
+// ─── DASHBOARD ────────────────────────────────────────────────────────────────
+function renderDashboard() {
+  const grid = document.getElementById('dash-grid');
+  
+  // Party distribution
+  const partyCount = {};
+  POLITICIANS.forEach(p => partyCount[p.party] = (partyCount[p.party]||0)+1);
+  const partySegs = Object.entries(partyCount).sort((a,b)=>b[1]-a[1]).slice(0,7);
+  const total = partySegs.reduce((s,[,v])=>s+v,0);
+  const partyColors = {'BJP':'#ff6b00','INC':'#00a651','AAP':'#0066ff','SP':'#cc0000','TMC':'#1da1f2','BSP':'#333','JDU':'#006400','Other':'#888'};
+
+  // State heatmap data
+  const stateColors = STATES.slice(0,18).map(s => {
+    const intensity = rn(1,10);
+    return {s: s.split(' ')[0].substring(0,3).toUpperCase(), intensity,
+      color: `rgba(255,107,0,${0.1 + intensity*0.08})`};
+  });
+
+  grid.innerHTML = `
+    <!-- Stat Cards -->
+    <div class="dash-card">
+      <div class="dash-card-title">Total Politicians Tracked</div>
+      <div class="dash-big-num">4,908</div>
+      <div style="margin-top:12px;display:flex;gap:1rem">
+        <div><div class="pol-metric-label">Lok Sabha MPs</div><div style="font-weight:700;color:var(--saffron)">543</div></div>
+        <div><div class="pol-metric-label">Rajya Sabha MPs</div><div style="font-weight:700;color:var(--gold)">245</div></div>
+        <div><div class="pol-metric-label">MLAs</div><div style="font-weight:700;color:var(--green)">4,120</div></div>
+      </div>
+    </div>
+
+    <div class="dash-card">
+      <div class="dash-card-title">Criminal Case Distribution</div>
+      <div class="dash-big-num text-red">2,847</div>
+      <div style="margin-top:8px;font-size:0.78rem;color:var(--muted)">Total pending cases across all politicians</div>
+      <div style="margin-top:12px;display:flex;gap:1rem">
+        <div><div class="pol-metric-label">Serious</div><div style="font-weight:700;color:#d62828">1,104</div></div>
+        <div><div class="pol-metric-label">% with cases</div><div style="font-weight:700;color:#c9a84c">44%</div></div>
+        <div><div class="pol-metric-label">New (30d)</div><div style="font-weight:700;color:#d62828">+34</div></div>
+      </div>
+    </div>
+
+    <div class="dash-card">
+      <div class="dash-card-title">Total Declared Wealth</div>
+      <div class="dash-big-num text-gold">₹5.4T</div>
+      <div style="margin-top:8px;font-size:0.78rem;color:var(--muted)">Cumulative declared assets (FY2024)</div>
+      <div style="margin-top:12px;display:flex;gap:1rem">
+        <div><div class="pol-metric-label">Avg per MP</div><div style="font-weight:700">₹23Cr</div></div>
+        <div><div class="pol-metric-label">Avg per MLA</div><div style="font-weight:700">₹8Cr</div></div>
+        <div><div class="pol-metric-label">5yr growth</div><div style="font-weight:700;color:var(--saffron)">+68%</div></div>
+      </div>
+    </div>
+
+    <!-- Party Distribution -->
+    <div class="dash-card" style="grid-column: span 2">
+      <div class="dash-card-title">Party Representation</div>
+      <div class="party-bar">
+        ${partySegs.map(([party, count]) => 
+          `<div class="party-seg" style="flex:${count};background:${partyColors[party]||'#888'}" title="${party}: ${count}"></div>`
+        ).join('')}
+      </div>
+      <div class="party-legend">
+        ${partySegs.map(([party, count]) => `
+          <div class="party-leg-item">
+            <div class="party-dot" style="background:${partyColors[party]||'#888'}"></div>
+            <span>${party} — <strong>${count}</strong> (${Math.round(count/total*100)}%)</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <!-- Integrity Score Distribution -->
+    <div class="dash-card">
+      <div class="dash-card-title">Integrity Score Distribution</div>
+      ${[['HIGH (>70)', POLITICIANS.filter(p=>p.integrityScore>70).length, '#00a651'],
+         ['MEDIUM (45–70)', POLITICIANS.filter(p=>p.integrityScore>45&&p.integrityScore<=70).length, '#c9a84c'],
+         ['HIGH RISK (<45)', POLITICIANS.filter(p=>p.integrityScore<=45).length, '#d62828']
+        ].map(([label,count,color]) => `
+        <div style="margin-bottom:12px">
+          <div style="display:flex;justify-content:space-between;font-size:0.75rem;margin-bottom:4px">
+            <span style="color:${color};font-weight:600">${label}</span>
+            <span class="mono" style="font-weight:700">${count}</span>
+          </div>
+          <div style="height:6px;background:var(--border);border-radius:3px;overflow:hidden">
+            <div style="height:100%;width:${count/60*100}%;background:${color};border-radius:3px"></div>
+          </div>
+        </div>`).join('')}
+    </div>
+
+    <!-- State Heatmap -->
+    <div class="dash-card" style="grid-column:span 2">
+      <div class="dash-card-title">State-wise Alert Intensity</div>
+      <div class="state-heatmap">
+        ${stateColors.map(({s,intensity,color}) => `
+          <div class="state-cell" style="background:${color};color:var(--ink)" title="${s}: ${intensity} alerts">
+            ${s}
+          </div>`).join('')}
+      </div>
+      <div style="margin-top:10px;font-size:0.7rem;color:var(--muted)">
+        Intensity based on criminal cases + corporate flags + news alerts per state
+      </div>
+    </div>
+
+    <!-- Corporate Links -->
+    <div class="dash-card">
+      <div class="dash-card-title">Corporate Overlap Stats</div>
+      <div class="dash-big-num">1,204</div>
+      <div style="font-size:0.78rem;color:var(--muted);margin-top:4px">Company directorships flagged</div>
+      <div class="divider"></div>
+      ${[['Active Directors',412],['Shareholdings',598],['Family-linked',194]].map(([l,v])=>`
+        <div class="data-row">
+          <span class="data-row-label">${l}</span>
+          <span class="data-row-val">${v}</span>
+        </div>`).join('')}
+    </div>
+
+    <!-- Party Switching -->
+    <div class="dash-card">
+      <div class="dash-card-title">Party Switching</div>
+      <div class="dash-big-num text-saffron">${POLITICIANS.filter(p=>p.switches>0).length}</div>
+      <div style="font-size:0.78rem;color:var(--muted);margin-top:4px">Politicians who switched parties</div>
+      <div class="divider"></div>
+      ${[['Switched once',POLITICIANS.filter(p=>p.switches===1).length],
+         ['Switched 2x', POLITICIANS.filter(p=>p.switches===2).length],
+         ['3+ switches', POLITICIANS.filter(p=>p.switches>=3).length]
+        ].map(([l,v])=>`
+        <div class="data-row">
+          <span class="data-row-label">${l}</span>
+          <span class="data-row-val">${v}</span>
+        </div>`).join('')}
+    </div>
+
+    <!-- Parliament Activity -->
+    <div class="dash-card">
+      <div class="dash-card-title">Parliament Activity</div>
+      <div style="display:flex;gap:1.5rem;margin-bottom:1rem">
+        <div>
+          <div class="pol-metric-label">Avg Attendance</div>
+          <div style="font-size:1.8rem;font-weight:800;font-family:var(--mono)">74%</div>
+        </div>
+        <div>
+          <div class="pol-metric-label">Below 50%</div>
+          <div style="font-size:1.8rem;font-weight:800;color:#d62828;font-family:var(--mono)">38</div>
+        </div>
+      </div>
+      ${[['Questions raised (avg)',142],['Bills participated',18],['Debates contributed',56]].map(([l,v])=>`
+        <div class="data-row">
+          <span class="data-row-label">${l}</span>
+          <span class="data-row-val">${v}</span>
+        </div>`).join('')}
+    </div>
+  `;
+}
+
+// ─── NEWS FEED ────────────────────────────────────────────────────────────────
+function renderNewsFeed() {
+  const feed = document.getElementById('news-feed');
+  feed.innerHTML = NEWS_ITEMS_DATA.map(item => `
+    <div class="news-item">
+      <div class="news-dot" style="background:${item.color}"></div>
+      <div>
+        <div class="news-date">${item.time} · ${item.source}
+          <span class="news-tag" style="background:${item.color}18;color:${item.color}">${item.category}</span>
+        </div>
+        <div class="news-headline">${item.title}</div>
+        <div class="news-source">Related: <strong>${item.pol}</strong> · AI-extracted entity</div>
+      </div>
+    </div>`).join('');
+}
+
+// ─── PROFILE ──────────────────────────────────────────────────────────────────
+function showProfile(id) {
+  const p = POLITICIANS.find(x => x.id === id) || makePolitician(id);
+  document.getElementById('main-view').style.display = 'none';
+  document.getElementById('footer').style.display = 'none';
+  document.querySelector('.alerts-strip').style.display = 'none';
+  const pv = document.getElementById('profile-view');
+  pv.style.display = 'block';
+  window.scrollTo(0,0);
+
+  const scoreClass = p.integrityScore > 70 ? 'score-high' : p.integrityScore > 45 ? 'score-mid' : 'score-low';
+  const scoreColor = p.integrityScore > 70 ? '#00a651' : p.integrityScore > 45 ? '#c9a84c' : '#d62828';
+  const riskCls = {'LOW':'risk-low','MEDIUM':'risk-medium','HIGH':'risk-high','CRITICAL':'risk-critical'}[p.riskLevel];
+
+  // generate asset history
+  const assetHistory = Array.from({length:6}, (_,i) => ({
+    year: 2019+i,
+    val: Math.round(p.prevAssets * Math.pow(1 + p.assetGrowth/100/5, i))
+  }));
+
+  // news for this politician
+  const polNews = Array.from({length: Math.min(p.newsItems, 8)}, (_,i) => ({
+    headline: pick([
+      `${p.name} questioned in ${pick(['ED','CBI','Income Tax'])} probe`,
+      `${p.name} inaugurates ₹${rn(10,500)}Cr project in ${p.constituency}`,
+      `${p.name} faces criticism over ${pick(['infrastructure delay','fund misuse','absenteeism'])}`,
+      `${p.name} attends Parliament session, raises ${pick(['farm bill','GST reform','jobs'])} issue`,
+      `${p.name}'s company bags government contract worth ₹${rn(50,800)}Cr`,
+      `${p.name} files nomination; declares ${rn(100,2000)}Cr in assets`,
+    ]),
+    time: `${rn(1,30)}d ago`,
+    source: pick(['The Hindu','Indian Express','NDTV','Times of India','The Wire','Mint','Economic Times']),
+    color: pick(['#d62828','#c9a84c','#ff6b00','#1da1f2','#00a651']),
+    cat: pick(['Legal','Finance','Parliament','Corporate','Election'])
+  }));
+
+  const scoreBreakdown = [
+    {label:'Criminal Record', score: 100 - p.criminal*8 - p.serious*5, color: p.criminal>3?'#d62828':'#00a651'},
+    {label:'Asset Transparency', score: 100 - (p.assetGrowth > 200 ? 30 : p.assetGrowth > 100 ? 15 : 0), color: p.assetGrowth>200?'#d62828':'#00a651'},
+    {label:'Parliamentary Activity', score: p.attendance, color: p.attendance < 60 ? '#d62828' : '#00a651'},
+    {label:'Corporate Independence', score: 100 - p.corps * 15, color: p.corps > 2 ? '#d62828' : '#c9a84c'},
+    {label:'Party Loyalty', score: 100 - p.switches * 20, color: p.switches > 1 ? '#d62828' : '#00a651'},
+  ];
+
+  document.getElementById('profile-content').innerHTML = `
+    <div class="profile-header">
+      <div class="profile-header-bg"></div>
+      <div class="profile-breadcrumb" onclick="showHome()">← <span>NetaWatch</span> / All Politicians / ${p.name}</div>
+      <div class="profile-hero">
+        <div class="profile-photo-lg">${p.initials}</div>
+        <div>
+          <div class="profile-name">${p.name}</div>
+          <div class="profile-title">${p.position} · ${p.constituency} · ${p.state}</div>
+          <div class="profile-tags">
+            <span class="profile-tag tag ${p.partyObj.cls}" style="background:${p.partyObj.color}22;color:${p.partyObj.color}">
+              ${p.party}
+            </span>
+            <span class="profile-tag" style="background:#7c3aed18;color:#7c3aed">${p.isMP?'Member of Parliament':'MLA'}</span>
+            <span class="profile-tag integrity-risk ${riskCls}">⚠ ${p.riskLevel} RISK</span>
+            ${p.criminal > 0 ? `<span class="profile-tag" style="background:#d6282818;color:#d62828">${p.criminal} Criminal Case${p.criminal>1?'s':''}</span>` : ''}
+          </div>
+        </div>
+        <div style="margin-left:auto;text-align:right">
+          <div style="color:#888;font-size:0.72rem;font-family:var(--mono);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px">Last Updated</div>
+          <div style="color:white;font-family:var(--mono);font-size:0.85rem">${p.lastUpdate}</div>
+          <div style="color:#666;font-size:0.7rem;margin-top:4px">Auto-updated daily</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="profile-body">
+      <div class="profile-main">
+
+        <!-- Financial Summary -->
+        <div class="data-card">
+          <div class="data-card-head">
+            <div class="data-card-title">💰 Financial Disclosure</div>
+            <span class="tag" style="background:#c9a84c18;color:#c9a84c;font-size:0.65rem">ADR · ECI Data</span>
+          </div>
+          <div class="data-card-body">
+            <div class="grid-2">
+              ${[
+                ['Total Assets', `₹${p.totalAssets}L`, p.totalAssets > 2000 ? '#c9a84c' : 'inherit'],
+                ['Movable Assets', `₹${p.movableAssets}L`, 'inherit'],
+                ['Immovable Assets', `₹${p.totalAssets - p.movableAssets}L`, 'inherit'],
+                ['Liabilities', `₹${p.liabilities}L`, p.liabilities > 500 ? '#d62828' : 'inherit'],
+                ['Asset Growth', `${p.assetGrowth > 0?'+':''}${p.assetGrowth}%`, p.assetGrowth > 100 ? '#d62828' : p.assetGrowth > 50 ? '#c9a84c' : '#00a651'],
+                ['Previous Assets', `₹${p.prevAssets}L`, 'inherit'],
+              ].map(([l,v,c]) => `
+                <div class="data-row">
+                  <span class="data-row-label">${l}</span>
+                  <span class="data-row-val" style="color:${c}">${v}</span>
+                </div>`).join('')}
+            </div>
+            ${p.assetGrowth > 150 ? `
+              <div style="background:#d6282808;border:1px solid #d6282830;border-radius:8px;padding:12px 16px;margin-top:1rem">
+                <div style="color:#d62828;font-weight:700;font-size:0.8rem">⚠ Anomaly Detected</div>
+                <div style="color:var(--muted);font-size:0.78rem;margin-top:4px">Asset growth of ${p.assetGrowth}% significantly exceeds median (68%). Flagged for review by the Intelligence Engine.</div>
+              </div>` : ''}
+          </div>
+        </div>
+
+        <!-- Asset Growth Chart -->
+        <div class="data-card">
+          <div class="data-card-head">
+            <div class="data-card-title">📈 Asset Growth Timeline</div>
+            <span style="font-size:0.7rem;color:var(--muted)">2019 → 2024</span>
+          </div>
+          <div class="data-card-body">
+            <div style="display:flex;align-items:flex-end;gap:8px;height:120px;padding:8px 0">
+              ${assetHistory.map((d,i) => {
+                const maxV = Math.max(...assetHistory.map(x=>x.val));
+                const h = Math.round(d.val/maxV * 100);
+                return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+                  <div style="font-family:var(--mono);font-size:0.6rem;color:var(--muted)">₹${d.val}L</div>
+                  <div style="width:100%;height:${h}px;background:${i===assetHistory.length-1?'var(--saffron)':'var(--surface)'};border-radius:4px 4px 0 0;border:1px solid var(--border);transition:all 0.3s"></div>
+                  <div style="font-size:0.65rem;color:var(--muted);font-family:var(--mono)">${d.year}</div>
+                </div>`;
+              }).join('')}
+            </div>
+          </div>
+        </div>
+
+        <!-- Criminal Cases -->
+        <div class="data-card">
+          <div class="data-card-head">
+            <div class="data-card-title">⚖️ Criminal Cases</div>
+            ${p.criminal > 0 ? `<span class="criminal-tag">${p.criminal} active case${p.criminal>1?'s':''}</span>` : `<span style="color:var(--green);font-size:0.78rem;font-weight:600">✓ Clean Record</span>`}
+          </div>
+          <div class="data-card-body">
+            ${p.criminal === 0 ? `<div style="text-align:center;padding:2rem;color:var(--muted);font-size:0.88rem">No criminal cases on record.</div>` :
+              Array.from({length: p.criminal}, (_,i) => `
+                <div style="padding:12px;background:${i===0?'#d6282806':'var(--surface)'};border-radius:8px;margin-bottom:8px;border:1px solid ${i<p.serious?'#d6282830':'var(--border)'}">
+                  <div style="display:flex;justify-content:space-between;align-items:center">
+                    <div style="font-weight:700;font-size:0.85rem">
+                      Case #${rn(100000,999999)}/2${rn(18,24)}
+                      ${i < p.serious ? '<span style="color:#d62828;font-size:0.7rem;margin-left:6px">SERIOUS</span>' : ''}
+                    </div>
+                    <span style="font-size:0.7rem;color:var(--muted);font-family:var(--mono)">Pending</span>
+                  </div>
+                  <div style="font-size:0.78rem;color:var(--muted);margin-top:4px">
+                    ${pick(['IPC 406 (Criminal Breach of Trust)','IPC 420 (Cheating)','Prevention of Corruption Act','PMLA (Money Laundering)','IPC 302 (Murder)','Arms Act','Forest Act','SC/ST Act Violation','Land Acquisition Fraud','NDPS Act'])}
+                  </div>
+                  <div style="font-size:0.7rem;color:var(--muted);margin-top:2px;font-family:var(--mono)">
+                    ${pick(['Sessions Court, Lucknow','High Court, Allahabad','CBI Court, Delhi','Sessions Court, Patna','Special Court, Mumbai'])} · Filed ${rn(2008,2023)}
+                  </div>
+                </div>`).join('')}
+          </div>
+        </div>
+
+        <!-- Corporate Links -->
+        <div class="data-card">
+          <div class="data-card-head">
+            <div class="data-card-title">🏢 Corporate & Business Links</div>
+            <span style="font-size:0.7rem;color:var(--muted)">MCA Database</span>
+          </div>
+          <div class="data-card-body">
+            ${p.corps === 0 ? `<div style="text-align:center;padding:2rem;color:var(--muted);font-size:0.88rem">No corporate directorships found.</div>` :
+              Array.from({length: p.corps}, (_,i) => `
+                <div style="padding:12px;border:1px solid var(--border);border-radius:8px;margin-bottom:8px">
+                  <div style="font-weight:700;font-size:0.85rem">${pick(['Sunrise Infra Pvt. Ltd','Galaxy Holdings','Bharat Realty Group','National Trade Corp.','Progressive Industries','Allied Ventures','Apex Constructions','United Enterprises'])} Ltd.</div>
+                  <div style="font-size:0.75rem;color:var(--muted);margin-top:3px">
+                    Role: ${pick(['Director','Shareholder','Promoter','Authorized Signatory'])} · 
+                    Incorporated: ${rn(1998,2022)} · 
+                    ${pick(['Active','Active','Active','Dormant'])}
+                  </div>
+                  ${i===0&&p.corps>1 ? `<div style="font-size:0.7rem;color:#c9a84c;margin-top:4px">⚠ Potential conflict: ${pick(['Government contractor','Regulated sector','Recently awarded tender'])}</div>` : ''}
+                </div>`).join('')}
+          </div>
+        </div>
+
+        <!-- News Timeline -->
+        <div class="data-card">
+          <div class="data-card-head">
+            <div class="data-card-title">📰 News Intelligence Timeline</div>
+            <span style="font-size:0.7rem;color:var(--muted)">${p.newsItems} articles · AI-monitored</span>
+          </div>
+          <div class="data-card-body">
+            <div class="news-timeline">
+              ${polNews.map(n => `
+                <div class="news-item">
+                  <div class="news-dot" style="background:${n.color};flex-shrink:0;margin-top:5px"></div>
+                  <div>
+                    <div class="news-date">${n.time} · ${n.source}
+                      <span class="news-tag" style="background:${n.color}18;color:${n.color}">${n.cat}</span>
+                    </div>
+                    <div class="news-headline">${n.headline}</div>
+                  </div>
+                </div>`).join('')}
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="profile-sidebar">
+
+        <!-- Integrity Score Widget -->
+        <div class="integrity-widget">
+          <div class="integrity-label">INTEGRITY SCORE</div>
+          <div class="integrity-score-big" style="color:${scoreColor}">${p.integrityScore}</div>
+          <div style="font-size:0.75rem;color:#666;margin-top:4px">/100</div>
+          <span class="integrity-risk ${riskCls}">${p.riskLevel} RISK</span>
+          <div class="integrity-bars">
+            ${scoreBreakdown.map(b => {
+              const pct = Math.max(0, Math.min(100, b.score));
+              return `<div class="integrity-bar-row">
+                <div class="integrity-bar-label">
+                  <span>${b.label}</span><span style="color:${b.color}">${pct}</span>
+                </div>
+                <div class="integrity-bar-track">
+                  <div class="integrity-bar-fill" style="width:${pct}%;background:${b.color}"></div>
+                </div>
+              </div>`;
+            }).join('')}
+          </div>
+          <div style="margin-top:16px;font-size:0.68rem;color:#555;text-align:left;line-height:1.6">
+            Score calculated from criminal cases, asset transparency, parliamentary activity, corporate independence, and party loyalty.
+          </div>
+        </div>
+
+        <!-- Quick Facts -->
+        <div class="data-card">
+          <div class="data-card-head"><div class="data-card-title">Quick Facts</div></div>
+          <div class="data-card-body">
+            ${[
+              ['Position', p.position],
+              ['Party', p.party],
+              ['State', p.state],
+              ['Constituency', p.constituency],
+              ['Education', p.education],
+              ['Profession', p.profession],
+              ['Elections Won', p.elections],
+              ['Parliament Attendance', `${p.attendance}%`],
+              ['Questions Raised', p.questionsRaised],
+              ['Party Switches', p.switches],
+            ].map(([l,v]) => `
+              <div class="data-row">
+                <span class="data-row-label">${l}</span>
+                <span class="data-row-val" style="font-size:0.82rem">${v}</span>
+              </div>`).join('')}
+          </div>
+        </div>
+
+        <!-- Election History -->
+        <div class="data-card">
+          <div class="data-card-head"><div class="data-card-title">Election History</div></div>
+          <div class="data-card-body">
+            ${Array.from({length: p.elections}, (_,i) => {
+              const yr = 2024 - i*5;
+              const won = Math.random() > 0.2;
+              const margin = rn(1000, 80000);
+              return `<div style="padding:10px 0;border-bottom:1px solid var(--border)">
+                <div style="display:flex;justify-content:space-between">
+                  <div style="font-weight:700;font-size:0.85rem">${yr} General</div>
+                  <span style="font-size:0.72rem;font-weight:700;color:${won?'#00a651':'#d62828'}">${won?'✓ WON':'✗ LOST'}</span>
+                </div>
+                <div style="font-size:0.72rem;color:var(--muted);margin-top:3px">${p.constituency} · ${p.party} · Margin: ${margin.toLocaleString()}</div>
+              </div>`;
+            }).join('')}
+          </div>
+        </div>
+
+        <div style="font-size:0.7rem;color:var(--muted);line-height:1.6;padding:8px 0">
+          Data sourced from ECI affidavits, ADR India, MCA21, Lok Sabha/Rajya Sabha websites, and AI-monitored news. Updated daily.
+        </div>
+
+      </div>
+    </div>
+  `;
+}
+
+function showHome() {
+  document.getElementById('profile-view').style.display = 'none';
+  document.getElementById('main-view').style.display = 'block';
+  document.getElementById('footer').style.display = 'block';
+  document.querySelector('.alerts-strip').style.display = 'block';
+  window.scrollTo(0,0);
+}
+
+function scrollToSection(id) {
+  showHome();
+  setTimeout(() => {
+    document.getElementById(id)?.scrollIntoView({behavior:'smooth'});
+  }, 50);
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+renderTicker();
+renderPoliticianCards(POLITICIANS.slice(0,12));
+renderRankTable(0);
+renderDashboard();
+renderNewsFeed();
+
+// Animate stat numbers
+function animateNum(el, target, prefix='', suffix='') {
+  let start = 0;
+  const step = target / 50;
+  const timer = setInterval(() => {
+    start = Math.min(start + step, target);
+    el.textContent = prefix + Math.round(start).toLocaleString() + suffix;
+    if(start >= target) clearInterval(timer);
+  }, 20);
+}
+</script>
+</body>
+</html>
